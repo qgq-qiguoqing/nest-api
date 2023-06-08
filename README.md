@@ -1,3 +1,4 @@
+## 持续更新中。。。
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
@@ -71,3 +72,8 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## 简介
+基于nestjs编写的一套博客的api
+基于 @nestjs/jwt 的登录验证
+结合@nestjs/swagger 生成文档
