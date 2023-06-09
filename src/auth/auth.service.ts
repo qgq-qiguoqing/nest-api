@@ -19,7 +19,13 @@ export class AuthService {
       throw new HttpException('密码错误', HttpStatus.UNAUTHORIZED);
     }
     const payload = { username: user.username, sub: user.id };
-    return await this.jwtService.signAsync(payload);
+    console.log(user);
+    let token = await this.jwtService.signAsync(payload);
+    delete user.password
+    return {
+      token,
+      ...user
+    }
   }
 
 

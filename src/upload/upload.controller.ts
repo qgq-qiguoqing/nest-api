@@ -13,6 +13,8 @@ import { Express } from 'express';
 import { UploadService } from './upload.service';
 import { UpdateUploadDto } from './dto/update-upload.dto';
 import { ApiTags, ApiOperation, ApiBody, ApiProperty, ApiOkResponse } from '@nestjs/swagger';
+import { Public } from 'src/public/public.decorator';
+@Public()
 @ApiTags('uploadController')
 @Controller('uploadController')
 export class UploadController {

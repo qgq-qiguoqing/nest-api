@@ -15,7 +15,9 @@ export class UploadService {
         file.buffer,
         () => { },
       );
-      return `http://localhost:3000/uploads/${file.originalname}`; // 返回文件URL
+      console.log(__dirname);
+
+      return `http://localhost:3000${__dirname + file.originalname}`; // 返回文件URL
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }

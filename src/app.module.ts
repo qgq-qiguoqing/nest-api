@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import * as path from "path";
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,6 +9,11 @@ import { AuthModule } from './auth/auth.module';
 import { UploadModule } from './upload/upload.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { ArticleModule } from './article/article.module';
+import { LoggerMiddleware } from './middleware/logger.middleware';
+import { RedirectMiddleware } from './middleware/redirect.middleware'
+
+// import { LoggerMiddlewareModule } from './logger-middleware/logger-middleware.module';
 console.log(__dirname);
 
 const isProd = process.env.NODE_ENV == "production";
@@ -39,9 +44,25 @@ const isProd = process.env.NODE_ENV == "production";
       password: "123456", // 密码
       database: "test", //数据库名
       synchronize: !isProd, //是否自动同步实体文件,生产环境建议关闭
-    }), UserModule, AuthModule, UploadModule],
+    }), UserModule, AuthModule, UploadModule, ArticleModule,],
   controllers: [AppController],
   providers: [AppService],
+
+
 })
 
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+
+  }
+}
+
+
+
+
+
+
+
