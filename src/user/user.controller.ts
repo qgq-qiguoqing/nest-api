@@ -5,17 +5,22 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiTags, ApiOperation, ApiBody, ApiProperty, ApiOkResponse } from '@nestjs/swagger';
 import { Public } from 'src/public/public.decorator';
 type userId = {
-  username: string
+  email: string
 }
 interface updateUser extends UpdateUserDto {
   id: string | number
 }
 class regDto {
+  @ApiProperty({ description: '邮箱' })
+  email: string
   @ApiProperty({ description: '用户名' })
   username: string;
 
   @ApiProperty({ description: '密码' })
   password: string;
+
+  @ApiProperty({ description: '头像' })
+  avatar: string
 }
 class findDto {
   @ApiProperty({ description: '用户id' })
@@ -46,10 +51,10 @@ export class UserController {
   }
 
   @ApiOperation({ summary: '查询用户' })
-  @ApiBody({ type: findDto, description: '根据用户ID' })
+  @ApiBody({ type: findDto, description: '根据用户邮箱' })
   @Post('/getUser')
   findOne(@Body() para: userId) {
-    return this.userService.findOne(para.username);
+    return this.userService.findOne(para.email);
   }
 
   @Post('/updateUser')

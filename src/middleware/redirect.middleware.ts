@@ -7,8 +7,6 @@ import { Request, Response, NextFunction } from 'express';
 export class RedirectMiddleware implements NestMiddleware {
 
     use(req: Request, res: Response, next: NextFunction) {
-        console.log('2222');
-
         const originalUrl = req.originalUrl;
         const redirectedUrl = originalUrl.replace('/blog', ':3000',);
         return res.redirect(301, redirectedUrl);

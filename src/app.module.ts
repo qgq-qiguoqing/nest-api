@@ -14,7 +14,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { RedirectMiddleware } from './middleware/redirect.middleware'
 
 // import { LoggerMiddlewareModule } from './logger-middleware/logger-middleware.module';
-console.log(__dirname);
+import { ClassificationModule } from './classification/classification.module';
 
 const isProd = process.env.NODE_ENV == "production";
 @Module({
@@ -44,7 +44,7 @@ const isProd = process.env.NODE_ENV == "production";
       password: "123456", // 密码
       database: "test", //数据库名
       synchronize: !isProd, //是否自动同步实体文件,生产环境建议关闭
-    }), UserModule, AuthModule, UploadModule, ArticleModule,],
+    }), UserModule, AuthModule, UploadModule, ArticleModule, ClassificationModule,],
   controllers: [AppController],
   providers: [AppService],
 

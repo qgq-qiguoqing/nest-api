@@ -20,11 +20,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
-    console.log(status);
 
     if (exception instanceof ApiException) {
+
       response.status(status).json({
-        status: exception.getErrorMessage() ? -1 : status in s ? s[status] : status,
+        status: exception.getErrorCode() in s ? s[status] : exception.getErrorCode(),
         timestamp: new Date().toISOString(),
         // path: request.url,
         msg: exception.getErrorMessage(),

@@ -9,7 +9,8 @@ import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { Reflector } from '@nestjs/core';
-
+import { ApiException } from 'src/common/filter/http-exception/api.exception';
+import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -32,22 +33,22 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
 
-    if (!token) throw new HttpException('验证不通过', HttpStatus.FORBIDDEN);
+    if (!token) throw new ApiException('token已失效', ApiErrorCode.USER_TOKEN);
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.configService.get('JWT_SECRET'),
       });
       request['user'] = payload;
     } catch (error) {
-      throw new HttpException('token验证失败', HttpStatus.FORBIDDEN);
+      throw new ApiException('token已失效', ApiErrorCode.USER_TOKEN);
     }
 
     return true;
   }
-  private extractTokenFromHeader(request: Request): string | undefined {
+  private extractTokenFromHeader(request: any): string | undefined {
     // const [type, token] = request.headers.authorization?.split(' ') ?? [];
     // console.log(request.headers.authorization);
 
-    return request.headers.authorization;
+    return request.headers.token;
   }
 }
