@@ -2,7 +2,8 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { createLogger, transports, format } from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
-
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
     private logger;

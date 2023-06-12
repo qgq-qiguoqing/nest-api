@@ -16,7 +16,7 @@ export class User {
         this.password = encry(this.password, this.salt);
     }
 
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: number; // 标记为主键，值自动生成
     @ApiProperty({
         description: "用户名"

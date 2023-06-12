@@ -4,6 +4,8 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { LoginAuthDto } from './dto/login-auth.dto';
+import { ApiException } from 'src/common/filter/http-exception/api.exception';
+import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
 import encry from '../utils/crypto'
 @Injectable()
 export class AuthService {
@@ -11,14 +13,14 @@ export class AuthService {
     private userService: UserService,
     private jwtService: JwtService,
   ) { }
-  async login(loginAuthDto: LoginAuthDto) {
-    const { username, password } = loginAuthDto;
+  async login(loginAuthDto: any) {
+    const { email, password } = loginAuthDto;
 
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findOne(email);
     if (user?.password !== encry(password, user.salt)) {
-      throw new HttpException('密码错误', HttpStatus.UNAUTHORIZED);
+      throw new ApiException('密码错误', ApiErrorCode.USER_NOTEXIST);
     }
-    const payload = { username: user.username, sub: user.id };
+    const payload = { username: user.email, sub: user.id };
     console.log(user);
     let token = await this.jwtService.signAsync(payload);
     delete user.password

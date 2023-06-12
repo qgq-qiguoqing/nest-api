@@ -3,6 +3,7 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiException } from './api.exception';
@@ -12,16 +13,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const s = {
       200: 0,
       401: 1,
-      400: -1
-
+      400: -1,
+      500: -1
     }
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
+    console.log(status);
+
     if (exception instanceof ApiException) {
       response.status(status).json({
-        status: status in s ? s[status] : exception.getErrorCode(),
+        status: exception.getErrorMessage() ? -1 : status in s ? s[status] : status,
         timestamp: new Date().toISOString(),
         // path: request.url,
         msg: exception.getErrorMessage(),
@@ -30,7 +33,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     }
 
     response.status(status).json({
-      status: status in s ? s[status] : status,
+      status: exception.message ? -1 : status in s ? s[status] : status,
       timestamp: new Date().toISOString(),
       // path: request.url,
       msg: exception.message,

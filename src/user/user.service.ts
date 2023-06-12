@@ -11,14 +11,16 @@ import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
 @Injectable()
 export class UserService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) { }
-  async create(createUserDto: CreateUserDto) {
-    const { username } = createUserDto;
+  async create(createUserDto: any) {
+    const { email } = createUserDto;
     const existUser = await this.userRepository.findOne({
-      where: { username },
+      where: { email },
     });
 
     if (existUser) {
+      // throw new HttpException('用户已存在', HttpStatus.OK);
 
+      throw new ApiException('用户已存在', ApiErrorCode.USER_NOTEXIST);
     }
     // throw new ApiException('用户已存在', ApiErrorCode.USER_EXIST);
     try {
@@ -29,19 +31,18 @@ export class UserService {
     }
   }
 
-
-
   async findAll() {
     return await this.userRepository.find()
   }
 
-  async findOne(username: string) {
+  async findOne(email: string) {
     const user = await this.userRepository.findOne({
       where: {
-        username
+        email
       }
     })
-    if (!user) throw new HttpException('用户名不存在', HttpStatus.BAD_REQUEST);
+
+    if (!user) throw new ApiException('用户名不存在', ApiErrorCode.USER_NOTEXIST);
     return user;
 
   }
