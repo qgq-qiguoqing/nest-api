@@ -3,6 +3,7 @@ export class CreateArticleDto {
     content: string
     author: string
     authorEmail: string
+
 }
 export class findPara {
     title: string

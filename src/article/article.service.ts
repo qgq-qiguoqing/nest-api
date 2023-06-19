@@ -31,12 +31,20 @@ export class ArticleService {
     return this.articleRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: number, authorEmail: string) {
     return this.articleRepository.findOne({
       where: {
-        id
+        id,
+        authorEmail
       }
     });
+  }
+  findTitle(title: string) {
+    return this.articleRepository.find({
+      where: {
+        title
+      }
+    })
   }
   count(title?: string, nameID?: string[]) {
     return this.articleRepository.count({
@@ -47,10 +55,19 @@ export class ArticleService {
     })
   }
   update(id: number, updateArticleDto: UpdateArticleDto) {
-    return `This action updates a #${id} article`;
+
+    return this.articleRepository.update(id, updateArticleDto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} article`;
+    return this.articleRepository.delete(id);
+  }
+  findIndx() {
+    return this.articleRepository.find({
+      take: 10,
+      order: {
+        createTime: 'DESC'
+      }
+    })
   }
 }

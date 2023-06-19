@@ -28,6 +28,7 @@ export class AuthGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
+    console.log(isPublic, 'isPublicisPublicisPublic');
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
@@ -49,6 +50,6 @@ export class AuthGuard implements CanActivate {
     // const [type, token] = request.headers.authorization?.split(' ') ?? [];
     // console.log(request.headers.authorization);
 
-    return request.headers.token;
+    return request.headers.token || '';
   }
 }

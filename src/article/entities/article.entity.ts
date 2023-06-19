@@ -52,9 +52,9 @@ export class Article {
     @Column()
     nameID: string
 
-    @ManyToOne(() => Classification, classification => classification.articles)
-    @JoinColumn({ name: 'id' })
-    classification: Classification;
+    // @ManyToOne(() => Classification, classification => classification.articles)
+    // @JoinColumn({ name: 'id' })
+    // classification: Classification;
 
     @ApiProperty({
         description: "分类"

@@ -5,7 +5,13 @@ import { UpdateArticleDto } from './dto/update-article.dto';
 import { ApiTags, ApiOperation, ApiBody, ApiProperty, ApiOkResponse } from '@nestjs/swagger';
 import { Article } from './entities/article.entity';
 import { timeFormat } from '../utils/useDateTime'
-
+import { ApiException } from 'src/common/filter/http-exception/api.exception';
+import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
+import { Public } from 'src/public/public.decorator';
+class updateType extends CreateArticleDto {
+  id: number | string
+  email: string
+}
 @ApiTags('Article')
 @Controller('article')
 export class ArticleController {
@@ -14,9 +20,17 @@ export class ArticleController {
   @ApiBody({ type: CreateArticleDto, description: '文章信息' })
   @ApiOkResponse({ description: 'Return all cats', })
   @Post('add')
-  create(@Body() createArticleDto: CreateArticleDto) {
+  async create(@Body() createArticleDto: CreateArticleDto) {
+    let res = await this.articleService.findTitle(createArticleDto.title)
+
+    if (res) {
+      throw new ApiException('文章标题已存在', ApiErrorCode.STATUS1);
+    }
+
     return this.articleService.create(createArticleDto);
   }
+
+  @Public()
   @Post('getList')
   @HttpCode(200)
   async find(@Body() para: findPara) {
@@ -39,24 +53,31 @@ export class ArticleController {
     };
     // return this.articleService.find(para)
   }
-  @Get()
-  findAll() {
-    return this.articleService.findAll();
+
+  @Public()
+  @Get('getIndex')
+  findIndex() {
+    return this.articleService.findIndx();
   }
 
   @Post('getDetails')
   @HttpCode(200)
   findOne(@Body() para: any) {
-    return this.articleService.findOne(para.id);
+    return this.articleService.findOne(para.id, para.email);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateArticleDto: UpdateArticleDto) {
+  @Post('update')
+  @HttpCode(200)
+  update(@Body() updateArticleDto: updateType) {
+    let id = updateArticleDto.id
+    delete updateArticleDto.id
+    delete updateArticleDto.email
     return this.articleService.update(+id, updateArticleDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.articleService.remove(+id);
+  @Post('delete')
+  remove(@Body() para: any) {
+    return this.articleService.remove(+para.id);
   }
+
 }

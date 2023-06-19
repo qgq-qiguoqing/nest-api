@@ -65,4 +65,5 @@ export class ClassificationService {
   remove(id: string) {
     return this.classification.delete({ nameID: id })
   }
+
 }

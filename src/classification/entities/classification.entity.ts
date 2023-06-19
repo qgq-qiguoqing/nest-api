@@ -30,6 +30,6 @@ export class Classification {
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createTime: Date;
 
-    @OneToMany(() => Article, article => article.classification)
-    articles: Article[];
+    // @OneToMany(() => Article, article => article.classification)
+    // articles: Article[];
 }
