@@ -1,26 +1,51 @@
 import { Injectable, } from '@nestjs/common';
-import { CreateArticleDto } from './dto/create-article.dto';
+import { CreateArticleDto, findPara } from './dto/create-article.dto';
 import { UpdateArticleDto } from './dto/update-article.dto';
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository, Like, In } from "typeorm";
 import { Article } from './entities/article.entity';
 @Injectable()
 export class ArticleService {
   constructor(@InjectRepository(Article) private articleRepository: Repository<Article>) { }
 
   create(createArticleDto: CreateArticleDto) {
-    this.articleRepository.find()
-    return 'This action adds a new article';
-  }
 
+    return this.articleRepository.save(createArticleDto)
+  }
+  find(para: findPara) {
+    let where = {
+      title: para.title.length ? Like(`%${para.title}%`) : null,
+      nameID: para.nameID.length ? In(para.nameID) : null
+    }
+    return (para.title.length || para.nameID.length) ? this.articleRepository.find({
+      where,
+      skip: para.pagerIndex,
+      take: para.pagerSize,
+    }) : this.articleRepository.find({
+
+      skip: para.pagerIndex,
+      take: para.pagerSize,
+    })
+  }
   findAll() {
-    return `This action returns all article`;
+    return this.articleRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} article`;
+    return this.articleRepository.findOne({
+      where: {
+        id
+      }
+    });
   }
-
+  count(title?: string, nameID?: string[]) {
+    return this.articleRepository.count({
+      where: {
+        title,
+        nameID: In(nameID)
+      }
+    })
+  }
   update(id: number, updateArticleDto: UpdateArticleDto) {
     return `This action updates a #${id} article`;
   }

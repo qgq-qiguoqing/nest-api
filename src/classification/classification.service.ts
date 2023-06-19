@@ -10,7 +10,6 @@ import { Classification } from './entities/classification.entity';
 export class ClassificationService {
 
   constructor(@InjectRepository(Classification) private classification: Repository<Classification>) { }
-
   create(createClassificationDto: CreateClassificationDto) {
 
     return this.classification.save({
@@ -20,7 +19,7 @@ export class ClassificationService {
   }
 
   findAll() {
-    return `This action returns all classification`;
+    return this.classification.find()
   }
 
   findOne(name: string) {
@@ -31,17 +30,24 @@ export class ClassificationService {
     });
   }
   find(v: any) {
-    return v.name ? this.classification.find({
-      where: {
-        name: Like(`%${v.name}%`),
-      },
-      skip: v.skip,
-      take: v.take,
-    }) : this.classification.find({
-
-      skip: v.skip,
-      take: v.take,
-    })
+    if (v.take) {
+      return v.name ? this.classification.find({
+        where: {
+          name: Like(`%${v.name}%`),
+        },
+        skip: v.skip,
+        take: v.take,
+      }) : this.classification.find({
+        skip: v.skip,
+        take: v.take,
+      })
+    } else {
+      return this.classification.find({
+        where: {
+          name: v.name,
+        },
+      })
+    }
   }
   count(v: string) {
     return v ? this.classification.count({
@@ -50,11 +56,13 @@ export class ClassificationService {
       },
     }) : this.classification.count()
   }
-  update(id: number, updateClassificationDto: UpdateClassificationDto) {
-    return `This action updates a #${id} classification`;
+  async update(updateClassificationDto: UpdateClassificationDto) {
+    return await this.classification.update({ nameID: updateClassificationDto.nameID }, {
+      name: updateClassificationDto.name
+    })
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} classification`;
+  remove(id: string) {
+    return this.classification.delete({ nameID: id })
   }
 }

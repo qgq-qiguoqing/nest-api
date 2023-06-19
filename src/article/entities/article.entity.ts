@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-
-@Entity('Article')
+import { Classification } from '../../classification/entities/classification.entity';
+@Entity('article')
 export class Article {
     @PrimaryGeneratedColumn()
     id: number;
@@ -9,20 +9,20 @@ export class Article {
     @ApiProperty({
         description: "标题"
     })
-    @Column()
+    @Column({ length: 1000 })
     title: string;
 
     @ApiProperty({
-        description: "内容"
+        description: "text"
     })
-    @Column("varchar", { length: 15000 })
+    @Column("longtext") // 使用 LONGTEXT 类型存储较长的文本数据
     content: string;
 
     @ApiProperty({
         description: "创建时间"
     })
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    date: Date;
+    createTime: Date;
     @ApiProperty({
         description: "更新时间"
     })
@@ -35,16 +35,32 @@ export class Article {
     @Column()
     author: string;
     @ApiProperty({
-        description: "作者ID"
+        description: "作者邮箱"
     })
     @Column()
-    authorID: string;
+    authorEmail: string;
+
+    // @ApiProperty({
+    //     description: "文章封面图片"
+    // })
+    // @Column()
+    // coverPhoto: string
 
     @ApiProperty({
-        description: "文章封面图片"
+        description: "分类ID"
     })
     @Column()
-    coverPhoto: string
+    nameID: string
+
+    @ManyToOne(() => Classification, classification => classification.articles)
+    @JoinColumn({ name: 'id' })
+    classification: Classification;
+
+    @ApiProperty({
+        description: "分类"
+    })
+    @Column()
+    name: string
 
 
 

@@ -6,7 +6,8 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
-
+  Req,
+  HttpCode
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
@@ -21,27 +22,20 @@ export class UploadController {
   constructor(private readonly uploadService: UploadService) { }
 
   @Post('upload')
+  @HttpCode(200)
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
+    @Req() request
   ): Promise<{ url: string }> {
+    console.log(file.destination);
 
 
-    const fileUrl = await this.uploadService.uploadFile(file);
+    const fileUrl = await this.uploadService.uploadFile(file, request.get('host'));
     return { url: fileUrl };
   }
 
-  // @UseInterceptors(FileInterceptor('file'))
-  // @Post('file')
-  // uploadFile(
-  //   @Body() body: UpdateUploadDto,
-  //   @UploadedFile() file: Express.Multer.File,
-  // ) {
-  //   return {
-  //     body,
-  //     file: file.buffer.toString(),
-  //   };
-  // }
+
 
   @UseInterceptors(FileInterceptor('file'))
   @Post('file/pass-validation')

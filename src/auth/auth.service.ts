@@ -1,9 +1,9 @@
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { LoginAuthDto } from './dto/login-auth.dto';
+// import { LoginAuthDto } from './dto/login-auth.dto';
 import { ApiException } from 'src/common/filter/http-exception/api.exception';
 import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
 import encry from '../utils/crypto'
@@ -21,7 +21,6 @@ export class AuthService {
       throw new ApiException('密码错误', ApiErrorCode.USER_NOTEXIST);
     }
     const payload = { username: user.email, sub: user.id };
-    console.log(user);
     let token = await this.jwtService.signAsync(payload);
     delete user.password
     return {

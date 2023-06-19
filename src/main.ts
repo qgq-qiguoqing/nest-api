@@ -3,9 +3,6 @@ import { AppModule } from './app.module';
 import { HttpExceptionFilter } from "./common/filter/http-exception/http-exception.filter";
 import { TransformInterceptor } from "./common/interceptor/transform/transform.interceptor";
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as express from 'express';
-import { join } from 'path';
-import { Logger, createLogger } from 'winston';
 import * as cors from 'cors';
 
 async function bootstrap() {
