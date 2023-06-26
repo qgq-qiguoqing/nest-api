@@ -13,9 +13,15 @@ export class Article {
     title: string;
 
     @ApiProperty({
-        description: "text"
+        description: "文章摘要"
     })
-    @Column("longtext") // 使用 LONGTEXT 类型存储较长的文本数据
+    @Column({ length: 1000 })
+    abstract: string
+
+    @ApiProperty({
+        description: "文章内容"
+    })
+    @Column('json')
     content: string;
 
     @ApiProperty({
@@ -27,19 +33,25 @@ export class Article {
         description: "更新时间"
     })
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-    update_time: Date;
+    updateTime: Date;
 
     @ApiProperty({
         description: "作者"
     })
     @Column()
     author: string;
+
     @ApiProperty({
         description: "作者邮箱"
     })
     @Column()
     authorEmail: string;
 
+    @ApiProperty({
+        description: "是否为热门文章"
+    })
+    @Column({ default: false })
+    isHot: boolean
     // @ApiProperty({
     //     description: "文章封面图片"
     // })

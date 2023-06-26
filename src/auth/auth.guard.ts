@@ -19,6 +19,8 @@ export class AuthGuard implements CanActivate {
     private reflector: Reflector,
   ) { }
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    console.log('isPublicisPublicisPublic');
+
     const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
       //即将调用的方法
       context.getHandler(),
@@ -28,7 +30,6 @@ export class AuthGuard implements CanActivate {
     if (isPublic) {
       return true;
     }
-    console.log(isPublic, 'isPublicisPublicisPublic');
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);

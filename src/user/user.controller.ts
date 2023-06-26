@@ -9,6 +9,8 @@ type userId = {
 }
 interface updateUser extends UpdateUserDto {
   id: string | number
+  email: string;
+  avatar: string
 }
 class regDto {
   @ApiProperty({ description: '邮箱' })
@@ -57,11 +59,17 @@ export class UserController {
     return this.userService.findOne(para.email);
   }
 
+
   @Post('/updateUser')
   update(@Body() updateUserDto: updateUser) {
-    let id = updateUserDto.id
+    let email = updateUserDto.email
     delete updateUserDto.id
-    return this.userService.update(+id, updateUserDto);
+    delete updateUserDto.email
+    if (!updateUserDto.password) {
+      delete updateUserDto.password
+    }
+    console.log(updateUserDto)
+    return this.userService.update(email, updateUserDto);
   }
 
   @Delete(':id')

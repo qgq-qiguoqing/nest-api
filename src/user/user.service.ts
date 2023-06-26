@@ -43,19 +43,34 @@ export class UserService {
     })
 
     if (!user) throw new ApiException('用户名不存在', ApiErrorCode.USER_NOTEXIST);
+    delete user.password
+
     return user;
 
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(email: string, updateUserDto: UpdateUserDto) {
 
     return await this.userRepository.update({
-      id
+      email
     }, {
       ...updateUserDto
     })
   }
+  async getHead(email: string) {
+    let usr = await this.userRepository.findOne({
+      where: {
+        email
+      }
+    })
 
+    return {
+      email: usr.email,
+      name: usr.nickname,
+      username: usr.username,
+      avatar: usr.avatar
+    }
+  }
   remove(id: number) {
     return `This action removes a #${id} user`;
   }

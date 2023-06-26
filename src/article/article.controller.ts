@@ -8,6 +8,7 @@ import { timeFormat } from '../utils/useDateTime'
 import { ApiException } from 'src/common/filter/http-exception/api.exception';
 import { ApiErrorCode } from 'src/common/enums/api-error-code.enum';
 import { Public } from 'src/public/public.decorator';
+import he from 'he'
 class updateType extends CreateArticleDto {
   id: number | string
   email: string
@@ -35,10 +36,10 @@ export class ArticleController {
   @HttpCode(200)
   async find(@Body() para: findPara) {
     const { pagerIndex, pagerSize, title, nameID } = para;
-    const total = await this.articleService.count(title, nameID)
+    const total = await this.articleService.count(title, nameID || [])
     const data = await this.articleService.find({
       title: title,
-      nameID: nameID,
+      nameID: nameID || [],
       pagerIndex: (pagerIndex - 1) * pagerSize,
       pagerSize: pagerSize,
     });
@@ -60,10 +61,30 @@ export class ArticleController {
     return this.articleService.findIndx();
   }
 
+  @Public()
+  @Get('getHot')
+  async getHot() {
+    let list = await this.articleService.getHot()
+    return list.map(it => {
+      return {
+        id: it.id,
+        title: it.title
+      }
+    })
+  }
+
   @Post('getDetails')
   @HttpCode(200)
   findOne(@Body() para: any) {
     return this.articleService.findOne(para.id, para.email);
+  }
+
+  @Public()
+  @Post('getContent')
+  @HttpCode(200)
+  getContent(@Body() para: any) {
+
+    return this.articleService.getContent(+para.id)
   }
 
   @Post('update')
@@ -72,6 +93,8 @@ export class ArticleController {
     let id = updateArticleDto.id
     delete updateArticleDto.id
     delete updateArticleDto.email
+
+    // updateArticleDto.content = he.encode(updateArticleDto.content.toString(), { strict: true })
     return this.articleService.update(+id, updateArticleDto);
   }
 
