@@ -22,6 +22,7 @@ import { join } from 'path';
 
 // import { LoggerMiddlewareModule } from './logger-middleware/logger-middleware.module';
 import { ClassificationModule } from './classification/classification.module';
+import { BackgroundImageModule } from './backgroundImage/background-image.module';
 
 const isProd = process.env.NODE_ENV == 'production';
 @Module({
@@ -68,6 +69,7 @@ const isProd = process.env.NODE_ENV == 'production';
     UploadModule,
     ArticleModule,
     ClassificationModule,
+    BackgroundImageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
