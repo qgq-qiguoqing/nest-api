@@ -2,35 +2,51 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { BackgroundImageService } from './background-image.service';
 import { CreateBackgroundImageDto } from './dto/create-background-image.dto';
 import { UpdateBackgroundImageDto } from './dto/update-background-image.dto';
+import { HttpCode } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBody, ApiProperty, ApiOkResponse } from '@nestjs/swagger';
+import { Public } from 'src/public/public.decorator';
+
 type paraType = {
-  id: number;
+  id?: number;
+  email: string
 }
-@Controller('background-image')
+@Controller('backgroundImage')
+@ApiTags('backgroundImage')
 export class BackgroundImageController {
   constructor(private readonly backgroundImageService: BackgroundImageService) { }
-
+  @ApiOperation({ summary: "保存背景图" })
   @Post('create')
   create(@Body() createBackgroundImageDto: CreateBackgroundImageDto) {
     return this.backgroundImageService.create(createBackgroundImageDto);
   }
 
+  @ApiOperation({ summary: "获取所有背景图" })
   @Post('getList')
-  findAll() {
-    return this.backgroundImageService.findAll();
+  @HttpCode(200)
+  async findAll(@Body() para: paraType) {
+    return {
+      list: await this.backgroundImageService.findAll(para.email)
+    };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.backgroundImageService.findOne(+id);
+  @ApiOperation({ summary: "获取背景图" })
+  @Post('get')
+  @HttpCode(200)
+  @Public()
+  findOne(@Body() para: paraType) {
+    return this.backgroundImageService.findOne(para.email);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBackgroundImageDto: UpdateBackgroundImageDto) {
-    return this.backgroundImageService.update(+id, updateBackgroundImageDto);
+  @ApiOperation({ summary: "设置背景图状态" })
+  @Post('setStatus')
+  @HttpCode(200)
+  update(@Body() para: paraType,) {
+    return this.backgroundImageService.update(+para.id, para.email);
   }
 
+  @ApiOperation({ summary: "删除背景图" })
   @Post('delete')
-  remove(@Param('id') para: paraType) {
+  remove(@Body() para: paraType) {
     return this.backgroundImageService.remove(+para.id);
   }
 }

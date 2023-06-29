@@ -16,4 +16,16 @@ export class BackgroundImage {
     })
     @Column({ default: false })
     isEnable: boolean
+
+    @ApiProperty({
+        description: "创建时间"
+    })
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createTime: Date;
+
+    @ApiProperty({
+        description: "用户邮箱"
+    })
+    @Column()
+    userEmail: string
 }

@@ -43,7 +43,7 @@ export class UserService {
     })
 
     if (!user) throw new ApiException('用户名不存在', ApiErrorCode.USER_NOTEXIST);
-    delete user.password
+    // delete user.password
 
     return user;
 

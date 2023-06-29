@@ -28,7 +28,6 @@ export class UploadController {
     @UploadedFile() file: Express.Multer.File,
     @Req() request
   ): Promise<{ url: string }> {
-    console.log(file.destination);
 
 
     const fileUrl = await this.uploadService.uploadFile(file, request.get('host'));

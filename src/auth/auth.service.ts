@@ -14,9 +14,11 @@ export class AuthService {
     private jwtService: JwtService,
   ) { }
   async login(loginAuthDto: any) {
-    const { email, password } = loginAuthDto;
+    const { password, userEmail } = loginAuthDto;
 
-    const user = await this.userService.findOne(email);
+
+    const user = await this.userService.findOne(userEmail);
+    console.log(user)
     if (user?.password !== encry(password, user.salt)) {
       throw new ApiException('密码错误', ApiErrorCode.USER_NOTEXIST);
     }

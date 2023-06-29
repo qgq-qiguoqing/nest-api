@@ -32,13 +32,14 @@ const isProd = process.env.NODE_ENV == 'production';
         // 指定文件存储目录
         destination: (req, file, callback) => {
           // 指定文件存储目录
+          console.log('22');
           const uploadPath = path.resolve(__dirname, '../uploads');
           callback(null, uploadPath);
         },
 
         // 通过时间戳来重命名上传的文件名
         filename: (_, file, callback) => {
-          console.log('22');
+
 
           const fileName = `${new Date().getTime() + path.extname(file.originalname)
             }`;

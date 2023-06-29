@@ -1,20 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto'
+
 import { ApiTags, ApiOperation, ApiBody, ApiProperty, ApiOkResponse } from '@nestjs/swagger';
 import { Public } from 'src/public/public.decorator';
 type userId = {
-  email: string
+  userEmail: string
 }
 interface updateUser extends UpdateUserDto {
   id: string | number
-  email: string;
+  userEmail: string;
   avatar: string
 }
 class regDto {
   @ApiProperty({ description: '邮箱' })
-  email: string
+  userEmail: string
   @ApiProperty({ description: '用户名' })
   username: string;
 
@@ -39,6 +40,7 @@ export class UserController {
   @ApiOkResponse({ description: 'Return all cats', type: [regDto] })
   @Public()
   @Post('/reg')
+  @HttpCode(200)
   create(@Body() createUserDto: CreateUserDto) {
     console.log(createUserDto);
 
@@ -55,21 +57,23 @@ export class UserController {
   @ApiOperation({ summary: '查询用户' })
   @ApiBody({ type: findDto, description: '根据用户邮箱' })
   @Post('/getUser')
+  @HttpCode(200)
   findOne(@Body() para: userId) {
-    return this.userService.findOne(para.email);
+    return this.userService.findOne(para.userEmail);
   }
 
 
   @Post('/updateUser')
+  @HttpCode(200)
   update(@Body() updateUserDto: updateUser) {
-    let email = updateUserDto.email
+    let userEmail = updateUserDto.userEmail
     delete updateUserDto.id
-    delete updateUserDto.email
+    delete updateUserDto.userEmail
     if (!updateUserDto.password) {
       delete updateUserDto.password
     }
     console.log(updateUserDto)
-    return this.userService.update(email, updateUserDto);
+    return this.userService.update(userEmail, updateUserDto);
   }
 
   @Delete(':id')
